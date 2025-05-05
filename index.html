@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>WesD Coding & Reasoning Benchmark</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f5f7fa;
+      padding: 20px;
+      margin: 0;
+      color: #333;
+      min-height: 100vh;
+    }
+    .benchmark-container {
+      max-width: 900px;
+      margin: 40px auto;
+      background: white;
+      border-radius: 10px;
+      padding: 30px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #222;
+      font-weight: 700;
+    }
+    .legend {
+      text-align: center;
+      font-size: 15px;
+      margin-bottom: 40px;
+      color: #555;
+      line-height: 1.6;
+    }
+    .benchmark-grid {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+    .model-column {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 130px;
+    }
+    .bar-container {
+      height: 300px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      align-items: center;
+      margin-bottom: 10px;
+      position: relative;
+    }
+    .score-bar {
+      width: 60px;
+      border-radius: 6px;
+      margin-bottom: 5px;
+    }
+    .score-label {
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+    .model-name {
+      font-size: 14px;
+      text-align: center;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .benchmark-legend {
+      border-top: 1px solid #eee;
+      padding-top: 25px;
+      margin-top: 20px;
+      display: flex;
+      justify-content: space-between;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+    }
+    .legend-color {
+      width: 20px;
+      height: 20px;
+      border-radius: 4px;
+      margin-right: 8px;
+    }
+    .footer {
+      margin-top: 30px;
+      text-align: center;
+      font-size: 14px;
+      color: #777;
+    }
+    .y-axis {
+      position: absolute;
+      left: -40px;
+      height: 300px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      color: #777;
+      font-size: 12px;
+    }
+    .y-axis-line {
+      position: absolute;
+      left: 0;
+      right: 0;
+      border-top: 1px dashed #ddd;
+      z-index: 0;
+    }
+    .x-axis {
+      height: 1px;
+      background: #333;
+      width: 100%;
+      margin-top: 10px;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="benchmark-container">
+    <h1>WesD Coding & Reasoning Benchmark</h1>
+    <div class="legend">
+      AI performance ratings based on code deobfuscation, logical reasoning, and accuracy in solving complex programming challenges.
+    </div>
+    
+    <div style="position: relative;">
+      <div class="y-axis">
+        <div style="transform: translateY(-6px);">100.00%</div>
+        <div style="transform: translateY(-6px);">75.00%</div>
+        <div style="transform: translateY(-6px);">50.00%</div>
+        <div style="transform: translateY(-6px);">25.00%</div>
+        <div style="transform: translateY(-6px);">0.00%</div>
+      </div>
+      
+      <div style="position: relative; margin-left: 30px;">
+        <div style="position: absolute; left: 0; right: 0; top: 0px; border-top: 1px dashed #ddd;"></div>
+        <div style="position: absolute; left: 0; right: 0; top: 75px; border-top: 1px dashed #ddd;"></div>
+        <div style="position: absolute; left: 0; right: 0; top: 150px; border-top: 1px dashed #ddd;"></div>
+        <div style="position: absolute; left: 0; right: 0; top: 225px; border-top: 1px dashed #ddd;"></div>
+        <div style="position: absolute; left: 0; right: 0; top: 300px; border-top: 1px solid #333;"></div>
+        
+        <div class="benchmark-grid" id="benchmark-grid">
+          <!-- Model columns will be inserted here -->
+        </div>
+      </div>
+    </div>
+    
+    <div class="footer">
+      Data based on comprehensive code deobfuscation tests - May 2025
+    </div>
+  </div>
+  
+  <script>
+    const benchmarkData = [
+      { name: "Qwen3 235B A22B", score: 100.00, color: "#8A2BE2" },  // Purple for Qwen
+      { name: "Gemini 2.5 Pro", score: 60.32, color: "#4285F4" },    // Blue for Gemini
+      { name: "Gemini 2.5 Flash", score: 55.75, color: "#4285F4" },  // Blue for Gemini
+      { name: "Claude 3.7 Sonnet", score: 50.42, color: "#FF6B00" }, // Orange for Claude
+      { name: "Grok 3", score: 20.65, color: "#777777" },            // Gray for Grok
+      { name: "GPT-4o Mini", score: 15.18, color: "#10A37F" }        // Teal for GPT
+    ];
+    
+    const benchmarkGrid = document.getElementById("benchmark-grid");
+    
+    // Add model columns
+    benchmarkData.forEach((model) => {
+      const modelColumn = document.createElement("div");
+      modelColumn.className = "model-column";
+      
+      const barContainer = document.createElement("div");
+      barContainer.className = "bar-container";
+      
+      const scoreBar = document.createElement("div");
+      scoreBar.className = "score-bar";
+      scoreBar.style.background = model.color;
+      scoreBar.style.height = `${model.score * 3}px`; // Scale the height
+      
+      const scoreLabel = document.createElement("div");
+      scoreLabel.className = "score-label";
+      scoreLabel.textContent = `${model.score.toFixed(2)}%`;
+      
+      const modelName = document.createElement("div");
+      modelName.className = "model-name";
+      modelName.textContent = model.name;
+      
+      barContainer.appendChild(scoreBar);
+      modelColumn.appendChild(barContainer);
+      modelColumn.appendChild(scoreLabel);
+      modelColumn.appendChild(modelName);
+      
+      benchmarkGrid.appendChild(modelColumn);
+    });
+  </script>
+</body>
+</html>
